@@ -16,14 +16,14 @@
             
             <div class="form-group">
                 <label for="cardNumber">Card Number:</label>
-                <input type="text" id="cardNumber" placeholder="1234567890123456" maxlength="16">
+                <input type="text" id="cardNumber" placeholder="1234567890123456" maxlength="16" data-default="">
             </div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label for="expiryMonth">Expiry Month:</label>
-                    <select id="expiryMonth">
-                        <option value="01">01</option>
+                    <select id="expiryMonth" data-default="01">
+                        <option value="01" selected>01</option>
                         <option value="02">02</option>
                         <option value="03">03</option>
                         <option value="04">04</option>
@@ -40,7 +40,7 @@
                 
                 <div class="form-group">
                     <label for="expiryYear">Expiry Year:</label>
-                    <select id="expiryYear">
+                    <select id="expiryYear" data-default="2025">
                         <option value="2024">2024</option>
                         <option value="2025" selected>2025</option>
                         <option value="2026">2026</option>
@@ -48,22 +48,22 @@
                         <option value="2028">2028</option>
                         <option value="2029">2029</option>
                         <option value="2030">2030</option>
-                        <option value="2030">2031</option>
-                        <option value="2030">2032</option>
-                        <option value="2030">2033</option>
-                        <option value="2030">2034</option>
-                        <option value="2030">2035</option>
-                        <option value="2030">2036</option>
-                        <option value="2030">2037</option>
-                        <option value="2030">2038</option>
-                        <option value="2030">2039</option>
-                        <option value="2030">2040</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="cvv">CVV:</label>
-                    <input type="text" id="cvv" placeholder="123" maxlength="4">
+                    <input type="text" id="cvv" placeholder="123" maxlength="4" data-default="">
                 </div>
             </div>
         </section>
@@ -74,7 +74,7 @@
             
             <div class="form-group">
                 <label for="numberOfAccounts">Number of Accounts:</label>
-                <input type="number" id="numberOfAccounts" value="1" min="1" max="10">
+                <input type="number" id="numberOfAccounts" value="1" min="1" max="10" data-default="1">
             </div>
             
             <div class="form-group">
@@ -86,7 +86,7 @@
                     </div>
                     
                     <div class="radio-group">
-                        <input type="radio" id="tradovate50k" name="accountType" value="50k" checked>
+                        <input type="radio" id="tradovate50k" name="accountType" value="50k" checked data-default="true">
                         <label for="tradovate50k">50k Tradovate</label>
                     </div>
                     
