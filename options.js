@@ -228,60 +228,62 @@ function handleSaveSettings() {
 function handleDefaultSettings() {
     console.log('Resetting to default settings...');
     
-    // Set default values
-    const defaultSettings = {
-        paymentDetails: {
-            cardNumber: '',
-            expiryMonth: '01',
-            expiryYear: '2025',
-            cvv: ''
-        },
-        settings: {
-            numberOfAccounts: 1,
-            accountType: '50k'
+    // First, clear all stored settings completely
+    chrome.storage.sync.clear(function() {
+        if (chrome.runtime.lastError) {
+            console.error('Error clearing storage:', chrome.runtime.lastError);
+            showStatus('Error clearing settings: ' + chrome.runtime.lastError.message, 'error');
+            return;
         }
-    };
+        
+        console.log('All stored settings cleared');
+        
+        // Reset all form fields to their default state
+        resetFormToDefaults();
+        
+        showStatus('All settings cleared and reset to defaults!', 'success');
+    });
+}
+
+function resetFormToDefaults() {
+    console.log('Resetting form to defaults...');
     
-    // Apply default values to form fields
+    // Clear all input fields
     document.getElementById('cardNumber').value = '';
-    document.getElementById('expiryMonth').value = defaultSettings.paymentDetails.expiryMonth;
-    document.getElementById('expiryYear').value = defaultSettings.paymentDetails.expiryYear;
     document.getElementById('cvv').value = '';
-    document.getElementById('numberOfAccounts').value = defaultSettings.settings.numberOfAccounts;
     
-    // Clear all radio buttons first, then set the default one
+    // Set select fields to first option (default)
+    document.getElementById('expiryMonth').selectedIndex = 0; // This will select "01"
+    document.getElementById('expiryYear').selectedIndex = 1;  // This will select "2025" (second option)
+    
+    // Reset number of accounts to 1
+    document.getElementById('numberOfAccounts').value = '1';
+    
+    // Clear ALL radio buttons first
     const allRadios = document.querySelectorAll('input[name="accountType"]');
     allRadios.forEach(radio => {
         radio.checked = false;
     });
     
-    // Set default radio button
-    const defaultRadio = document.querySelector(`input[name="accountType"][value="${defaultSettings.settings.accountType}"]`);
+    // Set the default radio button (50k Tradovate)
+    const defaultRadio = document.getElementById('tradovate50k');
     if (defaultRadio) {
         defaultRadio.checked = true;
-        console.log('Default radio button set to:', defaultSettings.settings.accountType);
+        console.log('Default radio button (50k) selected');
     } else {
-        console.error('Could not find default radio button for value:', defaultSettings.settings.accountType);
+        console.error('Could not find 50k radio button');
     }
     
-    // Update selected account type display
+    // Update the selected account type display
     updateSelectedAccountType();
     
-    // Clear any validation errors
-    document.querySelectorAll('.form-group.error').forEach(group => {
+    // Clear any validation error styling
+    const errorGroups = document.querySelectorAll('.form-group.error');
+    errorGroups.forEach(group => {
         group.classList.remove('error');
     });
     
-    // Save default settings to storage
-    chrome.storage.sync.set({ extensionSettings: defaultSettings }, function() {
-        if (chrome.runtime.lastError) {
-            console.error('Error saving default settings:', chrome.runtime.lastError);
-            showStatus('Error resetting to defaults: ' + chrome.runtime.lastError.message, 'error');
-        } else {
-            console.log('Default settings saved to storage successfully');
-            showStatus('Settings reset to default values!', 'info');
-        }
-    });
+    console.log('Form reset to defaults completed');
 }
 
 function showStatus(message, type = 'info') {
