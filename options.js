@@ -227,7 +227,6 @@ function handleSaveSettings() {
 
 function handleDefaultSettings() {
     console.log('DEFAULT SETTINGS BUTTON CLICKED!');
-    alert('Default Settings button was clicked!'); // Debug alert
     
     // Reset all form fields to their default state first
     resetFormToDefaults();
