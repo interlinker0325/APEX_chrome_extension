@@ -226,7 +226,8 @@ function handleSaveSettings() {
 }
 
 function handleDefaultSettings() {
-    console.log('Resetting to default settings...');
+    console.log('DEFAULT SETTINGS BUTTON CLICKED!');
+    alert('Default Settings button was clicked!'); // Debug alert
     
     // Reset all form fields to their default state first
     resetFormToDefaults();
@@ -245,68 +246,84 @@ function handleDefaultSettings() {
 }
 
 function resetFormToDefaults() {
-    console.log('Resetting all form fields to defaults using HTML data attributes...');
+    console.log('STARTING FORM RESET...');
+    alert('Starting form reset...'); // Debug alert
     
-    // METHOD 1: Reset all input and select fields using data-default attributes
-    const formFields = document.querySelectorAll('input[data-default], select[data-default]');
-    formFields.forEach(field => {
-        const defaultValue = field.getAttribute('data-default');
-        
-        if (field.type === 'radio') {
-            // For radio buttons, check if this is the default one
-            if (defaultValue === 'true') {
-                field.checked = true;
-                console.log(`Radio button ${field.id} set as default (checked)`);
-            } else {
-                field.checked = false;
-            }
-        } else {
-            // For regular inputs and selects
-            field.value = defaultValue;
-            console.log(`${field.id} set to default value: "${defaultValue}"`);
-        }
-    });
-    
-    // METHOD 2: Also reset radio buttons by unchecking all first, then finding the default
-    console.log('Ensuring radio buttons are properly reset...');
-    
-    // First, uncheck ALL radio buttons
-    const allRadios = document.querySelectorAll('input[name="accountType"]');
-    allRadios.forEach(radio => {
-        radio.checked = false;
-    });
-    
-    // Then check the one marked as default
-    const defaultRadio = document.querySelector('input[name="accountType"][data-default="true"]');
-    if (defaultRadio) {
-        defaultRadio.checked = true;
-        console.log(`Default radio button selected: ${defaultRadio.id} (${defaultRadio.value})`);
+    // DIRECT RESET - Set each field manually with debugging
+    console.log('Resetting Card Number...');
+    const cardNumber = document.getElementById('cardNumber');
+    if (cardNumber) {
+        cardNumber.value = '';
+        console.log('Card number reset to empty');
     } else {
-        // Fallback to 50k if no default is found
-        const fallbackRadio = document.getElementById('tradovate50k');
-        if (fallbackRadio) {
-            fallbackRadio.checked = true;
-            console.log('Fallback: 50k radio button selected');
-        }
+        console.error('Card number field not found!');
     }
     
-    // Update the selected account type display
-    updateSelectedAccountType();
+    console.log('Resetting CVV...');
+    const cvv = document.getElementById('cvv');
+    if (cvv) {
+        cvv.value = '';
+        console.log('CVV reset to empty');
+    } else {
+        console.error('CVV field not found!');
+    }
     
-    // Clear any validation error styling
-    const errorGroups = document.querySelectorAll('.form-group.error');
-    errorGroups.forEach((group, index) => {
-        group.classList.remove('error');
-        console.log(`Removed error styling from group ${index}`);
+    console.log('Resetting Expiry Month...');
+    const expiryMonth = document.getElementById('expiryMonth');
+    if (expiryMonth) {
+        expiryMonth.value = '01';
+        console.log('Expiry month reset to 01');
+    } else {
+        console.error('Expiry month field not found!');
+    }
+    
+    console.log('Resetting Expiry Year...');
+    const expiryYear = document.getElementById('expiryYear');
+    if (expiryYear) {
+        expiryYear.value = '2025';
+        console.log('Expiry year reset to 2025');
+    } else {
+        console.error('Expiry year field not found!');
+    }
+    
+    console.log('Resetting Number of Accounts...');
+    const numberOfAccounts = document.getElementById('numberOfAccounts');
+    if (numberOfAccounts) {
+        numberOfAccounts.value = '1';
+        console.log('Number of accounts reset to 1');
+    } else {
+        console.error('Number of accounts field not found!');
+    }
+    
+    console.log('Resetting Radio Buttons...');
+    // Clear all radio buttons
+    const allRadios = document.querySelectorAll('input[name="accountType"]');
+    console.log(`Found ${allRadios.length} radio buttons`);
+    allRadios.forEach((radio, index) => {
+        radio.checked = false;
+        console.log(`Unchecked radio ${index}: ${radio.id}`);
     });
     
-    // Force update of any visual elements that might depend on form values
-    setTimeout(() => {
-        updateSelectedAccountType();
-        console.log('Final update of selected account type display');
-    }, 100);
+    // Set default radio
+    const defaultRadio = document.getElementById('tradovate50k');
+    if (defaultRadio) {
+        defaultRadio.checked = true;
+        console.log('50k radio button checked as default');
+    } else {
+        console.error('50k radio button not found!');
+    }
     
-    console.log('All form fields reset to defaults completed using HTML data attributes!');
+    // Update display
+    updateSelectedAccountType();
+    
+    // Clear errors
+    const errorGroups = document.querySelectorAll('.form-group.error');
+    errorGroups.forEach(group => {
+        group.classList.remove('error');
+    });
+    
+    console.log('FORM RESET COMPLETED!');
+    alert('Form reset completed!'); // Debug alert
 }
 
 function showStatus(message, type = 'info') {
