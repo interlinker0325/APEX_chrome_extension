@@ -228,7 +228,10 @@ function handleSaveSettings() {
 function handleDefaultSettings() {
     console.log('Resetting to default settings...');
     
-    // First, clear all stored settings completely
+    // Reset all form fields to their default state first
+    resetFormToDefaults();
+    
+    // Then clear all stored settings completely
     chrome.storage.sync.clear(function() {
         if (chrome.runtime.lastError) {
             console.error('Error clearing storage:', chrome.runtime.lastError);
@@ -237,41 +240,69 @@ function handleDefaultSettings() {
         }
         
         console.log('All stored settings cleared');
-        
-        // Reset all form fields to their default state
-        resetFormToDefaults();
-        
         showStatus('All settings cleared and reset to defaults!', 'success');
     });
 }
 
 function resetFormToDefaults() {
-    console.log('Resetting form to defaults...');
+    console.log('Resetting all form fields to defaults...');
     
-    // Clear all input fields
-    document.getElementById('cardNumber').value = '';
-    document.getElementById('cvv').value = '';
+    // PAYMENT DETAILS - Clear all payment fields
+    const cardNumberField = document.getElementById('cardNumber');
+    const cvvField = document.getElementById('cvv');
+    const expiryMonthField = document.getElementById('expiryMonth');
+    const expiryYearField = document.getElementById('expiryYear');
     
-    // Set select fields to first option (default)
-    document.getElementById('expiryMonth').selectedIndex = 0; // This will select "01"
-    document.getElementById('expiryYear').selectedIndex = 1;  // This will select "2025" (second option)
+    if (cardNumberField) {
+        cardNumberField.value = '';
+        console.log('Card number cleared');
+    }
     
-    // Reset number of accounts to 1
-    document.getElementById('numberOfAccounts').value = '1';
+    if (cvvField) {
+        cvvField.value = '';
+        console.log('CVV cleared');
+    }
     
-    // Clear ALL radio buttons first
+    if (expiryMonthField) {
+        expiryMonthField.value = '01';
+        console.log('Expiry month set to 01');
+    }
+    
+    if (expiryYearField) {
+        expiryYearField.value = '2025';
+        console.log('Expiry year set to 2025');
+    }
+    
+    // SETTINGS - Reset number of accounts
+    const numberOfAccountsField = document.getElementById('numberOfAccounts');
+    if (numberOfAccountsField) {
+        numberOfAccountsField.value = '1';
+        console.log('Number of accounts set to 1');
+    }
+    
+    // ACCOUNT TYPE - Reset radio buttons
+    console.log('Resetting account type radio buttons...');
+    
+    // First, uncheck ALL radio buttons
     const allRadios = document.querySelectorAll('input[name="accountType"]');
-    allRadios.forEach(radio => {
+    allRadios.forEach((radio, index) => {
         radio.checked = false;
+        console.log(`Unchecked radio ${index}: ${radio.value}`);
     });
     
-    // Set the default radio button (50k Tradovate)
+    // Then set the default (50k Tradovate)
     const defaultRadio = document.getElementById('tradovate50k');
     if (defaultRadio) {
         defaultRadio.checked = true;
-        console.log('Default radio button (50k) selected');
+        console.log('50k Tradovate radio button selected as default');
     } else {
-        console.error('Could not find 50k radio button');
+        console.error('Could not find tradovate50k radio button');
+        // Fallback: try to find any 50k radio
+        const fallbackRadio = document.querySelector('input[name="accountType"][value="50k"]');
+        if (fallbackRadio) {
+            fallbackRadio.checked = true;
+            console.log('Fallback: 50k radio button selected');
+        }
     }
     
     // Update the selected account type display
@@ -279,11 +310,18 @@ function resetFormToDefaults() {
     
     // Clear any validation error styling
     const errorGroups = document.querySelectorAll('.form-group.error');
-    errorGroups.forEach(group => {
+    errorGroups.forEach((group, index) => {
         group.classList.remove('error');
+        console.log(`Removed error styling from group ${index}`);
     });
     
-    console.log('Form reset to defaults completed');
+    // Force update of any visual elements that might depend on form values
+    setTimeout(() => {
+        updateSelectedAccountType();
+        console.log('Final update of selected account type display');
+    }, 100);
+    
+    console.log('All form fields reset to defaults completed!');
 }
 
 function showStatus(message, type = 'info') {
