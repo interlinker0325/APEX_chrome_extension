@@ -226,6 +226,8 @@ function handleSaveSettings() {
 }
 
 function handleDefaultSettings() {
+    console.log('Resetting to default settings...');
+    
     // Set default values
     const defaultSettings = {
         paymentDetails: {
@@ -240,17 +242,26 @@ function handleDefaultSettings() {
         }
     };
     
-    // Apply default values to form
+    // Apply default values to form fields
     document.getElementById('cardNumber').value = '';
     document.getElementById('expiryMonth').value = defaultSettings.paymentDetails.expiryMonth;
     document.getElementById('expiryYear').value = defaultSettings.paymentDetails.expiryYear;
     document.getElementById('cvv').value = '';
     document.getElementById('numberOfAccounts').value = defaultSettings.settings.numberOfAccounts;
     
+    // Clear all radio buttons first, then set the default one
+    const allRadios = document.querySelectorAll('input[name="accountType"]');
+    allRadios.forEach(radio => {
+        radio.checked = false;
+    });
+    
     // Set default radio button
     const defaultRadio = document.querySelector(`input[name="accountType"][value="${defaultSettings.settings.accountType}"]`);
     if (defaultRadio) {
         defaultRadio.checked = true;
+        console.log('Default radio button set to:', defaultSettings.settings.accountType);
+    } else {
+        console.error('Could not find default radio button for value:', defaultSettings.settings.accountType);
     }
     
     // Update selected account type display
@@ -261,13 +272,13 @@ function handleDefaultSettings() {
         group.classList.remove('error');
     });
     
-    // Save default settings
+    // Save default settings to storage
     chrome.storage.sync.set({ extensionSettings: defaultSettings }, function() {
         if (chrome.runtime.lastError) {
             console.error('Error saving default settings:', chrome.runtime.lastError);
             showStatus('Error resetting to defaults: ' + chrome.runtime.lastError.message, 'error');
         } else {
-            console.log('Default settings applied successfully');
+            console.log('Default settings saved to storage successfully');
             showStatus('Settings reset to default values!', 'info');
         }
     });
