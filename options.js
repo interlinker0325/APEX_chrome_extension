@@ -30,8 +30,8 @@ function setupEventListeners() {
     });
     
     // Action buttons
-    document.getElementById('startPurchase').addEventListener('click', handleStartPurchase);
-    document.getElementById('stopProcess').addEventListener('click', handleStopProcess);
+    document.getElementById('saveSettings').addEventListener('click', handleSaveSettings);
+    document.getElementById('defaultSettings').addEventListener('click', handleDefaultSettings);
     
     // Auto-save settings when form changes
     const formElements = document.querySelectorAll('input, select');
@@ -190,7 +190,7 @@ function validateForm() {
     return errors;
 }
 
-function handleStartPurchase() {
+function handleSaveSettings() {
     // Validate form first
     const errors = validateForm();
     
@@ -199,10 +199,7 @@ function handleStartPurchase() {
         return;
     }
     
-    // Save settings before starting
-    saveSettings();
-    
-    // Get current settings
+    // Save settings
     const settings = {
         paymentDetails: {
             cardNumber: document.getElementById('cardNumber').value.replace(/\s/g, ''),
@@ -216,27 +213,62 @@ function handleStartPurchase() {
         }
     };
     
-    // Send message to background script to start the purchase process
-    chrome.runtime.sendMessage({
-        action: 'startPurchase',
-        settings: settings
-    }, function(response) {
+    // Save to Chrome storage
+    chrome.storage.sync.set({ extensionSettings: settings }, function() {
         if (chrome.runtime.lastError) {
-            showStatus('Error starting purchase process: ' + chrome.runtime.lastError.message, 'error');
-        } else if (response && response.success) {
-            showStatus(`Purchase process started for ${settings.settings.numberOfAccounts} ${settings.settings.accountType}k Tradovate account(s)`, 'success');
+            console.error('Error saving settings:', chrome.runtime.lastError);
+            showStatus('Error saving settings: ' + chrome.runtime.lastError.message, 'error');
         } else {
-            showStatus('Failed to start purchase process', 'error');
+            console.log('Settings saved successfully');
+            showStatus('Settings saved successfully!', 'success');
         }
     });
 }
 
-function handleStopProcess() {
-    chrome.runtime.sendMessage({ action: 'stopProcess' }, function(response) {
+function handleDefaultSettings() {
+    // Set default values
+    const defaultSettings = {
+        paymentDetails: {
+            cardNumber: '',
+            expiryMonth: '01',
+            expiryYear: '2025',
+            cvv: ''
+        },
+        settings: {
+            numberOfAccounts: 1,
+            accountType: '50k'
+        }
+    };
+    
+    // Apply default values to form
+    document.getElementById('cardNumber').value = '';
+    document.getElementById('expiryMonth').value = defaultSettings.paymentDetails.expiryMonth;
+    document.getElementById('expiryYear').value = defaultSettings.paymentDetails.expiryYear;
+    document.getElementById('cvv').value = '';
+    document.getElementById('numberOfAccounts').value = defaultSettings.settings.numberOfAccounts;
+    
+    // Set default radio button
+    const defaultRadio = document.querySelector(`input[name="accountType"][value="${defaultSettings.settings.accountType}"]`);
+    if (defaultRadio) {
+        defaultRadio.checked = true;
+    }
+    
+    // Update selected account type display
+    updateSelectedAccountType();
+    
+    // Clear any validation errors
+    document.querySelectorAll('.form-group.error').forEach(group => {
+        group.classList.remove('error');
+    });
+    
+    // Save default settings
+    chrome.storage.sync.set({ extensionSettings: defaultSettings }, function() {
         if (chrome.runtime.lastError) {
-            showStatus('Error stopping process: ' + chrome.runtime.lastError.message, 'error');
+            console.error('Error saving default settings:', chrome.runtime.lastError);
+            showStatus('Error resetting to defaults: ' + chrome.runtime.lastError.message, 'error');
         } else {
-            showStatus('Process stopped successfully', 'info');
+            console.log('Default settings applied successfully');
+            showStatus('Settings reset to default values!', 'info');
         }
     });
 }
