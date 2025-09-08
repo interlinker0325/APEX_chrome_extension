@@ -1,4 +1,35 @@
+// Global variables for process control
+let isProcessRunning = false;
+let currentIntervalId = null;
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'startPurchase') {
+        console.log("Purchase process started with settings:", message.settings);
+        
+        // Store settings for use in the scraping process
+        chrome.storage.local.set({ purchaseSettings: message.settings });
+        
+        // Send response
+        sendResponse({ success: true, message: 'Purchase process initiated' });
+        
+        // You can integrate this with your existing scraping logic
+        // For now, we'll just log the settings
+        return true;
+    }
+    
+    if (message.action === 'stopProcess') {
+        console.log("Stopping process...");
+        isProcessRunning = false;
+        
+        if (currentIntervalId) {
+            clearInterval(currentIntervalId);
+            currentIntervalId = null;
+        }
+        
+        sendResponse({ success: true, message: 'Process stopped' });
+        return true;
+    }
+    
     if (message.action === 'start') {
         console.log("Scraping is started!");
         const links = message.links;
@@ -6,8 +37,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             let counter = 0;
             let flag = false;
+            isProcessRunning = true;
 
             async function Action() {
+                // Check if process should continue
+                if (!isProcessRunning) {
+                    console.log("Process stopped by user");
+                    if (currentIntervalId) {
+                        clearInterval(currentIntervalId);
+                        currentIntervalId = null;
+                    }
+                    return;
+                }
 
                 await chrome.tabs.update(tabs[0].id, { url: links[counter] });
 
@@ -35,12 +76,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
                 if (counter >= links.length) {
                     console.log("All links processed.");
-                    clearInterval(intervalId); // Stop the interval if all links are processed
+                    isProcessRunning = false;
+                    clearInterval(currentIntervalId); // Stop the interval if all links are processed
+                    currentIntervalId = null;
                     return;
                 }
             }
             Action();
-            const intervalId = setInterval(Action, 120000)
+            currentIntervalId = setInterval(Action, 120000)
         });
     }
 });

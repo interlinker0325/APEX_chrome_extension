@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension Options</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Extension Settings</h1>
+        
+        <!-- Payment Details Section -->
+        <section class="form-section">
+            <h2>Payment Details</h2>
+            
+            <div class="form-group">
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" id="cardNumber" placeholder="1234567890123456" maxlength="16">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="expiryMonth">Expiry Month:</label>
+                    <select id="expiryMonth">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expiryYear">Expiry Year:</label>
+                    <select id="expiryYear">
+                        <option value="2024">2024</option>
+                        <option value="2025" selected>2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="4">
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="form-section">
+            <h2>Settings</h2>
+            
+            <div class="form-group">
+                <label for="numberOfAccounts">Number of Accounts:</label>
+                <input type="number" id="numberOfAccounts" value="1" min="1" max="10">
+            </div>
+            
+            <div class="form-group">
+                <label>Select Account Type:</label>
+                <div class="radio-grid">
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate25k" name="accountType" value="25k">
+                        <label for="tradovate25k">25k Tradovate</label>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate50k" name="accountType" value="50k" checked>
+                        <label for="tradovate50k">50k Tradovate</label>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate100k" name="accountType" value="100k">
+                        <label for="tradovate100k">100k Tradovate</label>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate150k" name="accountType" value="150k">
+                        <label for="tradovate150k">150k Tradovate</label>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate250k" name="accountType" value="250k">
+                        <label for="tradovate250k">250k Tradovate</label>
+                    </div>
+                    
+                    <div class="radio-group">
+                        <input type="radio" id="tradovate300k" name="accountType" value="300k">
+                        <label for="tradovate300k">300k Tradovate</label>
+                    </div>
+                </div>
+                
+                <div class="selected-info">
+                    <span id="selectedAccountType">Selected: 50k-Tradovate</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button id="startPurchase" class="btn btn-primary">Start Purchase</button>
+            <button id="stopProcess" class="btn btn-secondary">Stop</button>
+        </div>
+
+        <!-- Status Display -->
+        <div id="status" class="status-message"></div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

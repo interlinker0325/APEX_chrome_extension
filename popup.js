@@ -1,6 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const clickButton = document.getElementById('startBut');
+    const optionsButton = document.getElementById('optionsBtn');
 
     clickButton.addEventListener('click', async () => {
         const jsonUrl = 'urls.json';
@@ -19,6 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error('Error fetching JSON:', error);
             });
+    });
+
+    optionsButton.addEventListener('click', () => {
+        // Open the options page
+        chrome.runtime.openOptionsPage();
     });
 });
 
