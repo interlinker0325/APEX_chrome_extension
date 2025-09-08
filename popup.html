@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Form Filler</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Auto Form Filler</h1>
+            <p>Quick automation controls</p>
+        </header>
+
+        <div class="quick-form">
+            <div class="input-group">
+                <label for="targetUrl">Target URL:</label>
+                <input type="url" id="targetUrl" placeholder="https://example.com">
+            </div>
+
+            <div class="input-group">
+                <label for="inputText">Text to Input:</label>
+                <input type="text" id="inputText" placeholder="Enter text for first page">
+            </div>
+
+            <div class="settings-info">
+                <div class="info-item">
+                    <span class="info-label">Account Type:</span>
+                    <span id="accountTypeDisplay">Personal</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Card Configured:</span>
+                    <span id="cardStatus">❌ Not set</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="startAutomation" class="btn btn-primary">
+                <span class="btn-icon">🚀</span>
+                Start Automation
+            </button>
+            <button id="openOptions" class="btn btn-secondary">
+                <span class="btn-icon">⚙️</span>
+                Settings
+            </button>
+        </div>
+
+        <div class="status-section">
+            <div id="statusMessage" class="status-message"></div>
+        </div>
+
+        <div class="help-section">
+            <details>
+                <summary>How to use</summary>
+                <ol>
+                    <li>Click "Settings" to configure card info & preferences</li>
+                    <li>Enter target URL and input text above</li>
+                    <li>Click "Start Automation" to begin</li>
+                </ol>
+            </details>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
